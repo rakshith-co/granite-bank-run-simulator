@@ -14,6 +14,9 @@ const DEPOSITOR_TARGET = 50;
 const WHOLESALE_TARGET = 13;
 const FSCS_LIMIT = 35000;
 const WHOLESALE_QUIZ_THRESHOLD = 2;
+const WHOLESALE_SEAT_RATIO = Number(process.env.WHOLESALE_SEAT_RATIO || 0.2);
+const WHOLESALE_MIN_SEATS = Math.max(1, Number(process.env.WHOLESALE_MIN_SEATS || 3));
+const WHOLESALE_MAX_SEATS = Math.max(WHOLESALE_MIN_SEATS, Number(process.env.WHOLESALE_MAX_SEATS || 6));
 
 const joinQuiz = [
   {
@@ -304,8 +307,18 @@ function countRoles() {
   };
 }
 
+function getWholesaleSeatTarget(totalPlayers = countRoles().total) {
+  const safeTotal = Math.max(0, Number(totalPlayers || 0));
+  if (safeTotal === 0) return 0;
+  const ratioSeats = Math.max(1, Math.round(safeTotal * WHOLESALE_SEAT_RATIO));
+  const boundedSeats = Math.max(WHOLESALE_MIN_SEATS, Math.min(WHOLESALE_MAX_SEATS, ratioSeats));
+  return Math.min(safeTotal, boundedSeats);
+}
+
 function assignRole() {
   const counts = countRoles();
+  const wholesaleTarget = getWholesaleSeatTarget(counts.total + 1);
+  if (counts.wholesale >= wholesaleTarget) return 'depositor';
   if (counts.depositor >= DEPOSITOR_TARGET && counts.wholesale < WHOLESALE_TARGET) {
     return 'wholesale';
   }
@@ -337,7 +350,8 @@ function evaluateQuizScore(answers) {
 
 function assignRoleByQuiz(score) {
   const counts = countRoles();
-  if (counts.wholesale >= WHOLESALE_TARGET) return 'depositor';
+  const wholesaleTarget = getWholesaleSeatTarget(counts.total + 1);
+  if (counts.wholesale >= wholesaleTarget) return 'depositor';
   if (score >= WHOLESALE_QUIZ_THRESHOLD) return 'wholesale';
   return 'depositor';
 }
@@ -1522,6 +1536,7 @@ function enforcePhaseAction(player, actionType, payload) {
 
 function publicSnapshot(req, player) {
   const counts = countRoles();
+  const wholesaleSeatTarget = getWholesaleSeatTarget(counts.total);
   const feed = state.session.eventFeed.slice(0, 12);
   const leaderboard = getLeaderboard();
 
@@ -1576,6 +1591,12 @@ function publicSnapshot(req, player) {
       eventTriggeredAt: state.session.eventTriggeredAt || {},
       revealNames: state.session.revealNames,
       joinUrl: buildJoinUrl(req),
+      wholesaleSeatPolicy: {
+        ratio: WHOLESALE_SEAT_RATIO,
+        min: WHOLESALE_MIN_SEATS,
+        max: WHOLESALE_MAX_SEATS,
+        currentTarget: wholesaleSeatTarget,
+      },
     },
     counts,
     metrics: {
@@ -1822,6 +1843,7 @@ function handleApi(req, res, pathname) {
   if (req.method === 'GET' && pathname === '/api/session') {
     ensureJoinTokenFresh();
     const counts = countRoles();
+    const wholesaleSeatTarget = getWholesaleSeatTarget(counts.total);
     sendJson(res, 200, {
       ok: true,
       session: {
@@ -1831,6 +1853,12 @@ function handleApi(req, res, pathname) {
         joinTokenExpiresAt: state.session.join.expiresAt,
         joinToken: state.session.join.token,
         joinUrl: buildJoinUrl(req),
+        wholesaleSeatPolicy: {
+          ratio: WHOLESALE_SEAT_RATIO,
+          min: WHOLESALE_MIN_SEATS,
+          max: WHOLESALE_MAX_SEATS,
+          currentTarget: wholesaleSeatTarget,
+        },
       },
       counts,
     });
