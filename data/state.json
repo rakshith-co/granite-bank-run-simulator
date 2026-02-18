@@ -1,0 +1,108 @@
+{
+  "session": {
+    "id": "676c10860e",
+    "code": "59EBA4",
+    "phase": "end",
+    "phaseStartedAt": 1771379401561,
+    "createdAt": 1771379190105,
+    "join": {
+      "token": "d3cb79636fdcd8d2",
+      "expiresAt": 1771379790105
+    },
+    "activeEvents": [
+      "BBC_LEAK"
+    ],
+    "eventTriggeredAt": {
+      "BBC_LEAK": 1771379199064
+    },
+    "eventFeed": [
+      {
+        "id": "429fa3eb",
+        "type": "critical",
+        "text": "Liquidity buffer exhausted. Granite Bank collapsed.",
+        "at": 1771379525128
+      },
+      {
+        "id": "d662b8a6",
+        "type": "phase",
+        "text": "Phase changed to PHASE4.",
+        "at": 1771379401561
+      },
+      {
+        "id": "4e9cd316",
+        "type": "alert",
+        "text": "BREAKING: BoE emergency funding talks leaked. FSCS protection up to 35,000 is highlighted to all participants.",
+        "at": 1771379199064
+      },
+      {
+        "id": "36ee19a5",
+        "type": "phase",
+        "text": "Phase changed to PHASE3.",
+        "at": 1771379195557
+      },
+      {
+        "id": "a2f75b90",
+        "type": "phase",
+        "text": "Phase changed to PHASE2.",
+        "at": 1771379192497
+      },
+      {
+        "id": "f1b3805c",
+        "type": "phase",
+        "text": "Phase changed to PHASE1.",
+        "at": 1771379191914
+      },
+      {
+        "id": "eecdb56d",
+        "type": "info",
+        "text": "System reset. Session restarted.",
+        "at": 1771379190105
+      }
+    ],
+    "boeStatus": "REJECTED",
+    "bankStatus": "COLLAPSED",
+    "revealNames": true
+  },
+  "metrics": {
+    "lcr": 300,
+    "nsfr": 0.000005037360562172134,
+    "liquidityBuffer": 0,
+    "survivalHours": 0,
+    "fundingConcentrationPct": 8,
+    "wholesaleDependencyPct": 8,
+    "contractualMaturityPct": 0,
+    "behavioralMaturityPct": 0,
+    "scenario": "SEVERE STRESS",
+    "liborPct": 5.25,
+    "panicMeter": 29,
+    "assetLiquidity": {
+      "bidOfferSpreadPct": 3.4200000000000026,
+      "marketDepth": "Very Thin",
+      "immediacy": "Days",
+      "resilience": "Absent"
+    },
+    "cfpStage": {
+      "stage1": "ACTIVE",
+      "stage2": "ACTIVE",
+      "stage3": "PENDING"
+    },
+    "stressTypes": {
+      "institutionSpecific": true,
+      "marketWide": true
+    },
+    "assumptions": {
+      "fundingCostStable": true,
+      "prepaymentRatePct": 12,
+      "depositStability": true
+    },
+    "outcomes": {
+      "boeInjected": false,
+      "rescueInjectionAmount": 0
+    }
+  },
+  "players": {},
+  "meta": {
+    "ticks": 599,
+    "lastTickAt": 1771380387844
+  }
+}

@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: granite-bank-run-simulator
+    runtime: node
+    plan: standard
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: HOST
+        value: 0.0.0.0
+      - key: DATA_DIR
+        value: /var/data/granite
+      - key: OCR_SPACE_API_KEY
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+    disk:
+      name: granite-data
+      mountPath: /var/data
+      sizeGB: 2
