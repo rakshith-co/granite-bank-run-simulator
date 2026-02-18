@@ -13,6 +13,12 @@ services:
         value: 0.0.0.0
       - key: DATA_DIR
         value: /var/data/granite
+      - key: WHOLESALE_SEAT_RATIO
+        value: "0.2"
+      - key: WHOLESALE_MIN_SEATS
+        value: "3"
+      - key: WHOLESALE_MAX_SEATS
+        value: "6"
       - key: OCR_SPACE_API_KEY
         sync: false
       - key: OPENAI_API_KEY
